@@ -2,9 +2,10 @@ from flask import Flask, render_template,  redirect, url_for, session
 from flask import request, flash
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
-from models import db, User, Product
+from models import db, User, Product, ContactMessage, Order, OrderItem
 from auth import auth_bp
 from functools import wraps
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -95,8 +96,21 @@ def remove_from_cart(product_id):
     session['cart'] = cart
     return redirect(url_for('cart'))
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+        if name and email and message:
+            contact_msg = ContactMessage(name=name, email=email, subject=subject, message=message)
+            db.session.add(contact_msg)
+            db.session.commit()
+            flash('Your message has been sent!')
+            return redirect(url_for('contact'))
+        else:
+            flash('Please fill in all required fields.')
     return render_template('contact.html')
 
 @app.route('/shop')
@@ -117,7 +131,8 @@ def ai():
 def admin_panel():
     products = Product.query.all()
     users = User.query.all()
-    return render_template('admin.html', products=products, users=users)
+    messages = ContactMessage.query.order_by(ContactMessage.timestamp.desc()).all()
+    return render_template('admin.html', products=products, users=users, messages=messages)
 
 @app.route('/admin/add_product', methods=['POST'])
 @admin_required
@@ -144,6 +159,44 @@ def admin_remove_product():
     else:
         flash('Product not found!')
     return redirect(url_for('admin_panel'))
+
+@app.route('/checkout', methods=['POST'])
+@login_required
+def checkout():
+    cart = session.get('cart', {})
+    if not cart:
+        flash('Your cart is empty!')
+        return redirect(url_for('cart'))
+    user_id = session['user_id']
+    order = Order(user_id=user_id)
+    db.session.add(order)
+    db.session.flush()  # Get order.id before commit
+    for product_id, quantity in cart.items():
+        try:
+            pid = int(product_id)
+        except ValueError:
+            continue
+        product = Product.query.get(pid)
+        if product:
+            order_item = OrderItem(order_id=order.id, product_id=product.id, quantity=quantity, price=product.price)
+            db.session.add(order_item)
+    db.session.commit()
+    session.pop('cart', None)
+    flash('Your order has been placed!')
+    return redirect(url_for('cart'))
+
+@app.route('/orders')
+@login_required
+def user_orders():
+    user_id = session['user_id']
+    orders = Order.query.filter_by(user_id=user_id).order_by(Order.timestamp.desc()).all()
+    return render_template('orders.html', orders=orders)
+
+@app.route('/admin/sales')
+@admin_required
+def admin_sales():
+    orders = Order.query.order_by(Order.timestamp.desc()).all()
+    return render_template('admin_sales.html', orders=orders)
 
 if __name__ == '__main__':
     app.run(debug=True)

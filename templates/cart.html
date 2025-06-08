@@ -75,7 +75,8 @@
                 <td><strong id="total-amount">${{ total }}</strong></td>
               </tr>
             </table>
-            <button class="normal">Proceed to Checkout</button>
+            <button class="normal" onclick="event.preventDefault(); document.getElementById('checkout-form').submit();">Proceed to Checkout</button>
+            <form id="checkout-form" action="{{ url_for('checkout') }}" method="post" style="display:none;"></form>
           </div>
         </section>
         

@@ -39,14 +39,14 @@
         </section>
     
         <section id="form-details">
-            <form action="">
+            <form action="" method="post">
                 <span> LEAVE A MESSAGE </span>
                 <h2>We love to hear from you</h2>
-                <input type="text" placeholder="Your Name">
-                <input type="text" placeholder="E-mail">
-                <input type="text" placeholder="Subject">
-                <textarea name="" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
-                <button class="normal"> Submit </button>
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="E-mail" required>
+                <input type="text" name="subject" placeholder="Subject">
+                <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+                <button class="normal" type="submit"> Submit </button>
             </form>
     
             <div class="people">

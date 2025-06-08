@@ -28,11 +28,29 @@
             </form>
         </div>
     </div>
+
+    <div style="text-align:right; margin-bottom:24px;">
+        <a href="{{ url_for('admin_sales') }}" class="normal" style="
+            background: linear-gradient(90deg, #088178 0%, #4fd1c5 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            padding: 10px 22px;
+            text-decoration: none;
+            box-shadow: 0 2px 8px #e3e6f3;
+            transition: background 0.3s;
+            display: inline-block;
+        ">
+            <i class="fas fa-chart-line" style="margin-right:7px;"></i>View Sales / Orders
+        </a>
+    </div>
+
     <!-- Users Table -->
     <div style="margin-top: 48px;">
         <h3 style="color:#222; margin-bottom: 18px;">All Users</h3>
         <div style="overflow-x:auto;">
-            <table style="width:100%; border-collapse:collapse; background:#f8fafc; border-radius:10px; box-shadow:0 2px 8px #e3e6f3;">
+            <table style="width:100%; border-collapse:collapse; background:#f8fafc; border-radius:10px; box-shadow:0 2px 8px #e3e6f3; margin-bottom:32px;">
                 <thead>
                     <tr style="background:#e3e6f3;">
                         <th style="padding:12px 8px; color:#088178;">ID</th>
@@ -46,6 +64,33 @@
                         <td style="padding:10px 8px;">{{ user.id }}</td>
                         <td style="padding:10px 8px;">{{ user.username }}</td>
                         <td style="padding:10px 8px;">{{ user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <h3 style="color:#222; margin-bottom: 18px;">Contact Messages</h3>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; background:#f8fafc; border-radius:10px; box-shadow:0 2px 8px #e3e6f3;">
+                <thead>
+                    <tr style="background:#e3e6f3;">
+                        <th style="padding:12px 8px; color:#088178;">ID</th>
+                        <th style="padding:12px 8px; color:#088178;">Name</th>
+                        <th style="padding:12px 8px; color:#088178;">Email</th>
+                        <th style="padding:12px 8px; color:#088178;">Subject</th>
+                        <th style="padding:12px 8px; color:#088178;">Message</th>
+                        <th style="padding:12px 8px; color:#088178;">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                    <tr style="text-align:center;">
+                        <td style="padding:10px 8px;">{{ msg.id }}</td>
+                        <td style="padding:10px 8px;">{{ msg.name }}</td>
+                        <td style="padding:10px 8px;">{{ msg.email }}</td>
+                        <td style="padding:10px 8px;">{{ msg.subject }}</td>
+                        <td style="padding:10px 8px;">{{ msg.message }}</td>
+                        <td style="padding:10px 8px;">{{ msg.timestamp.strftime('%Y-%m-%d %H:%M') if msg.timestamp else '' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
