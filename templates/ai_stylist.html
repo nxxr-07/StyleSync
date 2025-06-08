@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff0f6;
+    color: #c71585;
+    margin: 0; padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-weight: 900;
+    margin-bottom: 30px;
+    color: #d81b60;
+    text-shadow: 0 0 5px #e91e63;
+  }
+
+  #stylist-section {
+    background: #ffe6f0;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+    box-shadow: 0 5px 15px rgba(216, 27, 96, 0.3);
+    position: relative;
+  }
+
+  label {
+    font-weight: 600;
+    margin-right: 10px;
+  }
+
+  select {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1.5px solid #d81b60;
+    font-weight: 600;
+    color: #d81b60;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+
+  button#get-style {
+    background: #d81b60;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button#get-style:hover {
+    background: #ad1457;
+  }
+
+  #style-result {
+    margin-top: 25px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #880e4f;
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  #styling-tip-popup {
+    display: none;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    max-width: 280px;
+    background: #fce4ec;
+    border: 2px solid #d81b60;
+    border-radius: 12px;
+    padding: 15px 20px;
+    color: #880e4f;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(216, 27, 96, 0.4);
+    animation: popupFade 1s ease forwards;
+    z-index: 1000;
+  }
+
+  #styling-tip-popup button {
+    background: #d81b60;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  #styling-tip-popup button:hover {
+    background: #ad1457;
+  }
+
+  #color-wheel-section {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #color-wheel-container {
+    margin: 0 auto;
+    width: 320px;
+    height: 320px;
+    position: relative;
+  }
+
+  #color-wheel {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    border: 4px solid #d81b60;
+    box-shadow: 0 0 15px #e91e63;
+    cursor: pointer;
+    transition: transform 2s ease-out;
+  }
+
+  #selected-colors {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #880e4f;
+  }
+
+  #selected-colors span {
+    font-weight: 800;
+  }
+
+  .color-swatch {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 10px;
+    border: 2.5px solid #d81b60;
+    box-shadow: 0 0 8px #e91e63;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  @keyframes popupFade {
+    from {opacity: 0; transform: translateY(30px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<h1 class="main-heading" style="margin-top: 40px; margin-bottom: 40px;">
+  Let AI stylist dress your vibe!
+</h1>
+
+
+<section id="stylist-section">
+  <label for="occasion">Occasion:</label>
+  <select id="occasion">
+    <option value="casual">Casual</option>
+    <option value="party">Party</option>
+    <option value="wedding">Wedding</option>
+    <option value="formal">Formal</option>
+  </select>
+
+  <label for="color">Color:</label>
+  <select id="color">
+    <option value="red">Red</option>
+    <option value="pink">Pink</option>
+    <option value="blue">Blue</option>
+    <option value="green">Green</option>
+    <option value="yellow">Yellow</option>
+    <option value="purple">Purple</option>
+    <option value="black">Black</option>
+    <option value="white">White</option>
+  </select>
+
+  
+  <button id="get-style">Get Style Recommendations</button>
+  <div id="style-result"></div>
+</section>
+
+<div id="styling-tip-popup">
+  <div id="styling-tip-text"></div>
+  <button id="close-tip">Close</button>
+</div>
+
+<div class="last-section" style="margin-bottom: 50px;">
+<section id="color-wheel-section">
+  <h2 style="margin-bottom: 20px;">Spin to style your shade</h2>
+  <div id="color-wheel-container" style="margin-top: 20px;">
+    <canvas id="color-wheel" width="320" height="320"></canvas>
+  </div>
+  <div id="selected-colors">
+    Selected Color: <span id="selected-color-name">None</span> &nbsp;&nbsp;
+    Complementary Color: <span id="complementary-color-name">None</span>
+    <div>
+      <div id="selected-color-swatch" class="color-swatch"></div>
+      <div id="complementary-color-swatch" class="color-swatch"></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+  const styleRecommendations = {
+    casual: {
+      red: { clothes: "Red casual t-shirt with jeans", jewellery: "Silver studs", footwear: "White sneakers", makeup: "Light pink gloss" },
+      pink: { clothes: "Pink dress", jewellery: "Rose gold bracelet", footwear: "Beige sandals", makeup: "Rosy cheeks" },
+    },
+    party: {
+      red: { clothes: "Red sequined dress", jewellery: "Diamond earrings", footwear: "Stilettos", makeup: "Bold red lips" },
+      pink: { clothes: "Pink satin gown", jewellery: "Rose gold necklace", footwear: "Metallic heels", makeup: "Glitter eyes" },
+    },
+    wedding: {
+      red: { clothes: "Red saree with gold", jewellery: "Gold bangles", footwear: "Golden sandals", makeup: "Classic bridal look" },
+      pink: { clothes: "Pink lehenga", jewellery: "Kundan set", footwear: "Juttis", makeup: "Blush tones" },
+    },
+    formal: {
+      blue: { clothes: "Navy suit", jewellery: "Cufflinks", footwear: "Black shoes", makeup: "Matte tones" },
+      black: { clothes: "Black formal dress", jewellery: "Pearls", footwear: "Pumps", makeup: "Red lipstick" },
+    }
+  };
+
+  const stylingTips = [
+    "Always match your accessories with your outfit's tone.",
+    "Neutral colors go with everything.",
+    "Mix textures for more style depth.",
+    "Balance bright clothes with soft makeup.",
+  ];
+
+  document.getElementById('get-style').addEventListener('click', () => {
+    const occasion = document.getElementById('occasion').value;
+    const color = document.getElementById('color').value;
+
+    let rec = styleRecommendations[occasion]?.[color];
+
+    if (!rec) {
+      const available = Object.values(styleRecommendations[occasion] || {});
+      rec = available.length > 0 ? available[Math.floor(Math.random() * available.length)] : {
+        clothes: "Neutral look with soft fabrics.",
+        jewellery: "Simple studs or chain.",
+        footwear: "Comfortable flats or loafers.",
+        makeup: "Natural shades for elegance."
+      };
+    }
+
+    document.getElementById('style-result').innerHTML = `
+      <p><strong>Clothes:</strong> ${rec.clothes}</p>
+      <p><strong>Jewellery:</strong> ${rec.jewellery}</p>
+      <p><strong>Footwear:</strong> ${rec.footwear}</p>
+      <p><strong>Makeup:</strong> ${rec.makeup}</p>
+    `;
+  });
+
+  window.onload = () => {
+    setTimeout(() => {
+      const tip = stylingTips[Math.floor(Math.random() * stylingTips.length)];
+      document.getElementById('styling-tip-text').textContent = tip;
+      document.getElementById('styling-tip-popup').style.display = 'block';
+    }, 1000);
+  };
+
+  document.getElementById('close-tip').onclick = () => {
+    document.getElementById('styling-tip-popup').style.display = 'none';
+  };
+
+  const canvas = document.getElementById('color-wheel');
+  const ctx = canvas.getContext('2d');
+  const radius = canvas.width / 2;
+  const center = { x: radius, y: radius };
+
+  const numberOfColors = 36;
+  const colors = [];
+  for (let i = 0; i < numberOfColors; i++) {
+    let hue = Math.floor((360 / numberOfColors) * i);
+    colors.push(`hsl(${hue}, 100%, 50%)`);
+  }
+
+  function drawColorWheel() {
+    const slice = (2 * Math.PI) / numberOfColors;
+    for (let i = 0; i < numberOfColors; i++) {
+      ctx.beginPath();
+      ctx.moveTo(center.x, center.y);
+      ctx.arc(center.x, center.y, radius, slice * i, slice * (i + 1));
+      ctx.closePath();
+      ctx.fillStyle = colors[i];
+      ctx.fill();
+    }
+  }
+
+  function getHue(hsl) {
+    const match = hsl.match(/hsl\((\d+),/);
+    return match ? +match[1] : 0;
+  }
+
+  function getComplementaryColor(hue) {
+    return (hue + 180) % 360;
+  }
+
+  function hueToName(hue) {
+    if (hue < 15 || hue >= 345) return 'Red';
+    if (hue < 45) return 'Orange';
+    if (hue < 75) return 'Yellow';
+    if (hue < 105) return 'Lime';
+    if (hue < 135) return 'Green';
+    if (hue < 165) return 'Turquoise';
+    if (hue < 195) return 'Cyan';
+    if (hue < 225) return 'Azure';
+    if (hue < 255) return 'Blue';
+    if (hue < 285) return 'Violet';
+    if (hue < 315) return 'Magenta';
+    return 'Pink';
+  }
+
+  drawColorWheel();
+  let rotation = 0, spinning = true, speed = 0.02;
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(center.x, center.y);
+    ctx.rotate(rotation);
+    ctx.translate(-center.x, -center.y);
+    drawColorWheel();
+    ctx.restore();
+    if (spinning) rotation = (rotation + speed) % (2 * Math.PI);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  canvas.onclick = () => {
+    spinning = !spinning;
+    if (!spinning) {
+      let angle = (rotation * 180 / Math.PI + 90) % 360;
+      const index = Math.floor(angle / (360 / numberOfColors));
+      const selected = colors[index];
+      const hue = getHue(selected);
+      const complementaryHue = getComplementaryColor(hue);
+
+      document.getElementById('selected-color-name').textContent = hueToName(hue);
+      document.getElementById('selected-color-swatch').style.backgroundColor = selected;
+      document.getElementById('complementary-color-name').textContent = hueToName(complementaryHue);
+      document.getElementById('complementary-color-swatch').style.backgroundColor = `hsl(${complementaryHue}, 100%, 50%)`;
+    }
+  };
+</script>
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+

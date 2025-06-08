@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <section id="page-header">
+       
+        <h2>#stayhome</h2>
+        <p>Save more with coupons & up to 70% off! </p>
+        
+    </section>
+    
+    <section class="main-section">
+  <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="filters-sidebar">
+    <h3>Categories</h3>
+    <ul>
+        <li><input type="checkbox" class="category" value="men"> Men</li>
+        <li><input type="checkbox" class="category" value="women"> Women</li>
+        <li><input type="checkbox" class="category" value="shirts"> Shirts</li>
+        <li><input type="checkbox" class="category" value="tops"> Tops</li>
+        <li><input type="checkbox" class="category" value="jackets"> Jackets</li>
+        <li><input type="checkbox" class="category" value="jeans"> Jeans</li>
+    </ul>
+
+    <h3>Filter by Price</h3>
+    <input type="range" id="priceRange" min="0" max="120" step="10">
+    <p>Max Price: <span id="priceValue">$120</span></p>
+
+    <h3>Filter by Color</h3>
+    <ul>
+      <li><input type="checkbox" class="color" value="black"> Black</li>
+      <li><input type="checkbox" class="color" value="white"> White</li>
+      <li><input type="checkbox" class="color" value="green"> Green</li>
+      <li><input type="checkbox" class="color" value="brown"> Brown</li>
+    </ul>
+            </div>
+
+            <div id="selected-filters" style="margin-top:20px; font-weight:bold; color:#4A90E2;"></div>
+        </section>
+
+        <section id="product1" class="section-p1 products-section">
+            <div class="pro-container">
+                {% for product in products %}
+                <div class="pro">
+                    <img src="{{ url_for('static', filename='images/products/' ~ product.image) }}" alt="{{ product.name }}">
+                    <div class="des">
+                        <span>{{ product.brand }}</span>
+                        <h5>{{ product.name }}</h5>
+                        <div class="star">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h4>₹{{ product.price }}</h4>
+                    </div>
+                    <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="cart"><i class="fal fa-shopping-cart"></i></a>
+                </div>
+                {% endfor %}
+            </div>
+            <p id="no-products-message" style="
+            display: none;
+            font-weight: 600;
+            color: #007acc;
+            background-color: #e6f2ff;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            ">
+            😕 No products found. Try changing the filters.
+            </p>
+        </section>
+
+    </section>
+
+     
+    <section id="pagination" class="section-p1">
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#"><i class="fal fa-long-arrow-alt-right"></i></a>
+    </section>
+
+    <section id="newsletter" class="section-m1 section-p1">
+        <div class="newstext">
+            <h4>Sign Up for Newsletter</h4>
+            <p>get E-mail updates about our latest shop and <span>special offers.</span></p>
+        </div>
+        <div class="form">
+            <input type="text" placeholder="Your email address">
+            <button class="normal">Sign Up</button>
+        </div>
+    </section>
+
+{% endblock %}

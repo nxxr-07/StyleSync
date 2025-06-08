@@ -1,0 +1,215 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Style Sync</title>
+<link rel="shortcut icon" href="{{url_for('static', filename='images/logo.png') }}" type="image/x-icon">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .signup-container {
+    background: #fff;
+    max-width: 480px;
+    width: 100%;
+    padding: 48px 40px 40px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  }
+  .signup-container h2 {
+    margin: 0 0 36px;
+    font-weight: 700;
+    font-size: 30px;
+    text-align: center;
+    letter-spacing: 1px;
+    color: #222;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="date"] {
+    width: 100%;
+    padding: 16px 18px;
+    margin-bottom: 28px;
+    border: 1.8px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: inherit;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="tel"]:focus,
+  input[type="date"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px #007bffaa;
+  }
+  .gender-group {
+    margin-bottom: 28px;
+  }
+  .gender-group label {
+    margin-right: 16px;
+    font-weight: 600;
+  }
+  .gender-group input[type="radio"] {
+    margin-right: 6px;
+    cursor: pointer;
+  }
+  button {
+    width: 100%;
+    padding: 16px 0;
+    font-size: 18px;
+    font-weight: 700;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  button:hover,
+  button:focus {
+    background-color: #0056b3;
+    outline: none;
+  }
+  .bottom-text {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-top: 24px;
+  }
+  .bottom-text a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  .bottom-text a:hover,
+  .bottom-text a:focus {
+    text-decoration: underline;
+    outline: none;
+  }
+  @media (max-width: 480px) {
+    .signup-container {
+      padding: 36px 28px 32px;
+      max-width: 100%;
+    }
+    button {
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+<body> -->
+
+{% extends "base.html" %}
+
+
+{% block content %}
+
+  <div class="signin-container">
+    <h2>Create Your Account</h2>
+    <form class="signin-form" action="{{ url_for('auth.signup') }}" method="POST" novalidate class="signin-form">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="Choose a username"
+        required
+        autocomplete="username"
+      />
+      
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Your email address"
+        required
+        autocomplete="email"
+      />
+      
+      <label for="phone">Phone Number</label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        placeholder="e.g. +91 9876543210"
+        pattern="^\+?\d{7,15}$"
+        title="Enter valid phone number with country code"
+        required
+      />
+      
+      <label>Gender</label>
+      <div class="gender-group">
+        <label><input type="radio" name="gender" value="male" required /> Male</label>
+        <label><input type="radio" name="gender" value="female" /> Female</label>
+        <label><input type="radio" name="gender" value="other" /> Other</label>
+      </div>
+      
+      <label for="dob">Date of Birth</label>
+      <input
+        type="date"
+        id="dob"
+        name="dob"
+        required
+        max="<?= (new DateTime())->format('Y-m-d') ?>"
+      />
+      
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Create a password"
+        required
+        autocomplete="new-password"
+        minlength="8"
+      />
+      
+      <label for="confirm-password">Confirm Password</label>
+      <input
+        type="password"
+        id="confirm-password"
+        name="confirm_password"
+        placeholder="Confirm your password"
+        required
+        autocomplete="new-password"
+        minlength="8"
+      />
+      
+      <button type="submit">Sign Up</button>
+    </form>
+    <div class="bottom-text">
+      Already have an account? <a href="{{ url_for('auth.signin') }}">Sign In</a>
+    </div>
+  </div>
+<!-- </body>
+</html> -->
+
+{% endblock %}
+

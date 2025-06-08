@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-panel" style="padding: 2rem; max-width: 950px; margin: 40px auto 60px auto; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.10);">
+    <h2 style="text-align:center; color:#088178; margin-bottom: 18px; letter-spacing: 1px;">Admin Panel</h2>
+    <hr style="margin-bottom: 32px; border: none; border-top: 2px solid #e3e6f3;">
+    <div class="options" style="display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between;">
+        <!-- Add Product -->
+        <div style="flex:1; min-width: 300px; background: #f6fbf9; border-radius: 12px; padding: 24px 18px; box-shadow: 0 2px 8px #e3e6f3;">
+            <h3 style="color:#088178; margin-bottom: 18px;">Add Product</h3>
+            <form action="{{ url_for('admin_add_product') }}" method="post" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:14px;">
+                <input type="text" name="name" placeholder="Product Name" required style="padding:10px; border-radius:6px; border:1.5px solid #cce7d0;">
+                <input type="text" name="brand" placeholder="Brand" required style="padding:10px; border-radius:6px; border:1.5px solid #cce7d0;">
+                <input type="number" name="price" placeholder="Price" step="0.01" required style="padding:10px; border-radius:6px; border:1.5px solid #cce7d0;">
+                <input type="text" name="image" placeholder="Image filename (e.g. f1.jpg)" required style="padding:10px; border-radius:6px; border:1.5px solid #cce7d0;">
+                <button type="submit" class="normal" style="background: linear-gradient(90deg, #088178 0%, #4fd1c5 100%); color: #fff; border: none; border-radius: 6px; font-weight: 600;">Add Product</button>
+            </form>
+        </div>
+        <!-- Remove Product -->
+        <div style="flex:1; min-width: 300px; background: #fdf6f6; border-radius: 12px; padding: 24px 18px; box-shadow: 0 2px 8px #e3e6f3;">
+            <h3 style="color:#ef3636; margin-bottom: 18px;">Remove Product</h3>
+            <form action="{{ url_for('admin_remove_product') }}" method="post" style="display:flex; flex-direction:column; gap:14px;">
+                <select name="product_id" style="padding:10px; border-radius:6px; border:1.5px solid #f6dbf6;">
+                    {% for product in products %}
+                    <option value="{{ product.id }}">{{ product.name }} (ID: {{ product.id }})</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="normal" style="background: linear-gradient(90deg, #ef3636 0%, #f09819 100%); color: #fff; border: none; border-radius: 6px; font-weight: 600;">Remove Product</button>
+            </form>
+        </div>
+    </div>
+    <!-- Users Table -->
+    <div style="margin-top: 48px;">
+        <h3 style="color:#222; margin-bottom: 18px;">All Users</h3>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; background:#f8fafc; border-radius:10px; box-shadow:0 2px 8px #e3e6f3;">
+                <thead>
+                    <tr style="background:#e3e6f3;">
+                        <th style="padding:12px 8px; color:#088178;">ID</th>
+                        <th style="padding:12px 8px; color:#088178;">Username</th>
+                        <th style="padding:12px 8px; color:#088178;">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr style="text-align:center;">
+                        <td style="padding:10px 8px;">{{ user.id }}</td>
+                        <td style="padding:10px 8px;">{{ user.username }}</td>
+                        <td style="padding:10px 8px;">{{ user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

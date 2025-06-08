@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+        <section id="page-header" class="about-header">
+                <h2>#KnowsUs</h2>
+    
+                <p>Your favorite fashion sync-up starts with us!</p>
+        </section>
+    
+        <section id="about-head" class="section-p1">
+            <img src="{{url_for('static', filename='images/about/a6.jpg') }}" alt="">
+            <div>
+                 <h2>Who We Are?</h2>
+                 <p> Your favorite fashion sync-up starts with us!
+                 At StyleSync, we blend fashion with functionality to give you an effortless shopping experience.
+                 From trendy outfits to timeless pieces, our goal is to keep your wardrobe fresh and fabulous.
+                 We’re a student-built platform with a passion for design, style, and seamless e-commerce. </p>
+   
+                 <abbr title="">We are a youth-driven fashion platform syncing trends, tech, and style to deliver a modern shopping experience.</abbr>
+       
+                 <br><br>
+       
+                <marquee bgcolor="#ccc" loop="-1" scrollamount="5" width="100%">Creating stunning images with as much or s little control as you like thanks to a choice of basic and creative modes.</marquee>
+            </div>
+        </section>                      
+    
+        <section id="about-app" class="section-p1">
+            <h1>Download Our <a href="#">App</a></h1>
+            <div class="video">
+                <video autoplay muted loop src="{{url_for('static', filename='images/about/1.mp4') }}"></video>
+            </div>
+        </section>
+    
+        <section id="feature" class="section-p1">
+            <div class="fe-box">
+                <img src="{{url_for('static', filename='images/features/f1.png') }}" alt="">
+                <h6>Free Shipping</h6>
+            </div>
+            <div class="fe-box">
+                <img src="{{url_for('static', filename='images/features/f2.png') }}" alt="">
+                <h6>Online Order</h6>
+            </div>
+            <div class="fe-box">
+                <img src="{{url_for('static', filename='images/features/f3.png') }}" alt="">
+                <h6>Save Money</h6>
+            </div>
+            <div class="fe-box">
+                <img src="{{url_for('static', filename='images/features/f4.png') }}" alt="">
+                <h6>Promotions</h6>
+            </div>
+            <div class="fe-box">
+                <img src="{{url_for('static', filename='images/features/f5.png') }}" alt="">
+                <h6>Happy Sell</h6>
+            </div>
+            <div class="fe-box">
+                <img src="{{url_for('static', filename='images/features/f6.png') }}" alt="">
+                <h6>F24/7 Support</h6>
+            </div>
+        </section>
+    
+        <section id="newsletter" class="section-p1 section-m1">
+            <div class="newstext">
+                <h4>Sign Up For Newsletters</h4>
+                <p>Get E-mail updates about our latest shop and <span>special offers.</span></p>
+            </div>
+            <div class="form">
+                <input type="text" placeholder="Your email address">
+                <button class="normal">Sign Up</button>
+            </div>
+        </section>
+     
+     
+{% endblock %}
